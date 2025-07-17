@@ -1,5 +1,6 @@
 package com.example.springdeploytest.kakao_authentication.controller;
 
+import com.example.springdeploytest.kakao_authentication.service.KakaoAuthenticationService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +17,14 @@ import java.io.IOException;
 @RequestMapping("/kakao-authentication")
 public class KakaoAuthenticationController {
 
+    final private KakaoAuthenticationService kakaoAuthenticationService;
+
     @GetMapping("/login")
-    public void requestLogin(@RequestParam("code") String code,
+    public String requestLogin(@RequestParam("code") String code,
                              HttpServletResponse response) throws IOException {
 
         log.info("requestLogin(): code {}", code);
+
+        return kakaoAuthenticationService.handleLogin(code);
     }
 }
