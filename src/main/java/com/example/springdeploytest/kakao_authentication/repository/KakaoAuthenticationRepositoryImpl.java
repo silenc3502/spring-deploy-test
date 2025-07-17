@@ -17,6 +17,7 @@ public class KakaoAuthenticationRepositoryImpl implements KakaoAuthenticationRep
     private final String clientId;
     private final String redirectUri;
     private final String tokenRequestUri;
+    private final String userInfoRequestUri;
 
     // RestTemplate <- Client가 되서 요청하기 위해 필요
     private final RestTemplate restTemplate;
@@ -25,11 +26,13 @@ public class KakaoAuthenticationRepositoryImpl implements KakaoAuthenticationRep
             @Value("${kakao.client-id}") String clientId,
             @Value("${kakao.redirect-uri}") String redirectUri,
             @Value("${kakao.token-request-uri}") String tokenRequestUri,
+            @Value("${kakao.user-info-request-uri}") String userInfoRequestUri,
             RestTemplate restTemplate) {
 
         this.clientId = clientId;
         this.redirectUri = redirectUri;
         this.tokenRequestUri = tokenRequestUri;
+        this.userInfoRequestUri = userInfoRequestUri;
 
         this.restTemplate = restTemplate;
     }
@@ -48,6 +51,19 @@ public class KakaoAuthenticationRepositoryImpl implements KakaoAuthenticationRep
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(formData, headers);
         ResponseEntity<Map> response = restTemplate.exchange(
                 tokenRequestUri, HttpMethod.POST, requestEntity, Map.class);
+
+        return response.getBody();
+    }
+
+    @Override
+    public Map<String, Object> getUserInfo(String accessToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<Map> response = restTemplate.exchange(
+                userInfoRequestUri, HttpMethod.GET, requestEntity, Map.class);
 
         return response.getBody();
     }
