@@ -1,16 +1,20 @@
 package com.example.springdeploytest.kakao_authentication.service;
 
+import com.example.springdeploytest.account.entity.Account;
+import com.example.springdeploytest.account.repository.AccountRepository;
 import com.example.springdeploytest.kakao_authentication.repository.KakaoAuthenticationRepository;
 import com.example.springdeploytest.kakao_authentication.service.response.KakaoUserInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class KakaoAuthenticationServiceImpl implements KakaoAuthenticationService {
     final private KakaoAuthenticationRepository kakaoAuthenticationRepository;
+    final private AccountRepository accountRepository;
 
     @Override
     public KakaoUserInfoResponse handleLogin(String code) {
@@ -26,6 +30,13 @@ public class KakaoAuthenticationServiceImpl implements KakaoAuthenticationServic
         Map<?, ?> userInfoKakaoAccount = (Map<?, ?>) userInfoResponse.get("kakao_account");
         String email = (String) (userInfoKakaoAccount).get("email");
 
-        return KakaoUserInfoResponse.from(email, nickname, accessToken);
+        Optional<Account> maybeAccount = accountRepository.findByEmail(email);
+        boolean isNewUser = false;
+
+        if (maybeAccount.isEmpty()) {
+            isNewUser = true;
+        }
+
+        return KakaoUserInfoResponse.from(email, nickname, accessToken, isNewUser);
     }
 }

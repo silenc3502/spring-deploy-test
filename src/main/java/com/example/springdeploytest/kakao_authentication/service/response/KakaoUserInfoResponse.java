@@ -9,12 +9,16 @@ public class KakaoUserInfoResponse {
     final private String email;
     final private String nickname;
     final private String accessToken;
+    final private Boolean isNewUser;
 
-    public static KakaoUserInfoResponse from(String email, String nickname, String accessToken) {
+    public static KakaoUserInfoResponse from(
+            String email, String nickname, String accessToken, boolean isNewUser) {
+
         return new KakaoUserInfoResponse(
                 email,
                 nickname,
-                accessToken
+                accessToken,
+                isNewUser
         );
     }
 }
