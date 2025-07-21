@@ -10,6 +10,7 @@ public class KakaoLoginResponseForm {
     final private String email;
     final private String nickname;
     final private String userToken;
+    final private Boolean isNewUser;
 
     public static KakaoLoginResponseForm from(
             KakaoUserInfoResponse kakaoUserInfoResponse,
@@ -18,7 +19,8 @@ public class KakaoLoginResponseForm {
         return new KakaoLoginResponseForm(
                 kakaoUserInfoResponse.getEmail(),
                 kakaoUserInfoResponse.getNickname(),
-                temporaryUserToken
+                temporaryUserToken,
+                kakaoUserInfoResponse.getIsNewUser()
         );
     }
 }
