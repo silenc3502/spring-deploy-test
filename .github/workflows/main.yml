@@ -65,6 +65,7 @@ jobs:
         username: ec2-user
         key: ${{ secrets.PRIVATE_KEY }}
         script_stop: true
+        envs: GHCR_USERNAME, GHCR_TOKEN, DOCKER_IMAGE
         script: |
           cd /home/ec2-user/spring-deploy-test
           docker-compose down
@@ -77,3 +78,7 @@ jobs:
 
           docker-compose up -d
 
+    env:
+      GHCR_USERNAME: silenc3502
+      GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+      DOCKER_IMAGE: ghcr.io/silenc3502/spring-backend:latest
