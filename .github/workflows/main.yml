@@ -59,13 +59,12 @@ jobs:
     runs-on: [ self-hosted, deploy-spring-test ]
     steps:
     - name: Deploy to Production
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@v1
       with:
         host: ${{ secrets.HOST_IP }}
         username: ec2-user
         key: ${{ secrets.PRIVATE_KEY }}
-        script_stop: true
-        envs: GHCR_USERNAME, GHCR_TOKEN, DOCKER_IMAGE
+        port: 22
         script: |
           cd /home/ec2-user/spring-deploy-test
           docker-compose down
@@ -77,8 +76,3 @@ jobs:
           docker logout
 
           docker-compose up -d
-
-    env:
-      GHCR_USERNAME: silenc3502
-      GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
-      DOCKER_IMAGE: ghcr.io/silenc3502/spring-backend:latest
