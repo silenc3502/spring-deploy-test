@@ -59,7 +59,7 @@ jobs:
     runs-on: [ self-hosted, deploy-spring-test ]
     steps:
     - name: Deploy to Production
-      uses: appleboy/ssh-action@v0.1.10
+      uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.HOST_IP }}
         username: ec2-user
