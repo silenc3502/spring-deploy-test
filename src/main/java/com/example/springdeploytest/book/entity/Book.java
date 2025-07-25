@@ -23,9 +23,12 @@ public class Book {
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
-    public Book(String title, String content, Account account) {
+    private Long price;
+
+    public Book(String title, String content, Account account, Long price) {
         this.title = title;
         this.content = content;
         this.account = account;
+        this.price = price;
     }
 }
