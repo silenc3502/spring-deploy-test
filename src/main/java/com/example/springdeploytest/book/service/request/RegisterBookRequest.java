@@ -10,9 +10,10 @@ import lombok.RequiredArgsConstructor;
 public class RegisterBookRequest {
     final private String title;
     final private String content;
+    final private Long price;
     
     // Request를 Entity로 변환
     public Book toBook(Account account) {
-        return new Book(title, content, account);
+        return new Book(title, content, account, price);
     }
 }

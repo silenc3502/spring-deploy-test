@@ -12,9 +12,10 @@ public class RegisterBookRequestForm {
     // 여러분들이 지정한 요청 정보
     final private String title;
     final private String content;
+    final private Long price;
     
     // RequestForm을 Request로 변환
     public RegisterBookRequest toRegisterBookRequest() {
-        return new RegisterBookRequest(title, content);
+        return new RegisterBookRequest(title, content, price);
     }
 }
