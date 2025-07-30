@@ -11,8 +11,14 @@ import com.example.springdeploytest.order.repository.OrdersRepository;
 import com.example.springdeploytest.order.service.request.CreateAllOrderItemRequest;
 import com.example.springdeploytest.order.service.request.CreateAllOrdersRequest;
 import com.example.springdeploytest.order.service.request.CreateOrderItemRequest;
+import com.example.springdeploytest.order.service.request.ListOrdersRequest;
 import com.example.springdeploytest.order.service.response.CreateAllOrdersResponse;
+import com.example.springdeploytest.order.service.response.ListOrdersResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,5 +79,26 @@ public class OrdersServiceImpl implements OrdersService {
         List<OrderItem> savedOrderItemList = orderItemRepository.saveAll(orderItemList);
 
         return CreateAllOrdersResponse.from(savedOrders, savedOrderItemList);
+    }
+
+    @Override
+    public ListOrdersResponse list(ListOrdersRequest request) {
+        Pageable pageable = PageRequest.of(
+                request.getPage() - 1,
+                request.getPerPage(),
+                Sort.by("created").descending());
+
+        Long accountId = request.getAccountId();
+        Page<Orders> pagedOrders = ordersRepository.findAllByAccountId(accountId, pageable);
+        List<Orders> pagedOrdersList = pagedOrders.getContent();
+
+        List<OrderItem> pagedOrderItemList = orderItemRepository.findByOrdersIn(pagedOrdersList);
+
+        return ListOrdersResponse.from(
+                pagedOrdersList,
+                pagedOrderItemList,
+                pagedOrders.getTotalPages(),
+                pagedOrders.getTotalElements()
+        );
     }
 }
