@@ -1,9 +1,13 @@
 package com.example.springdeploytest.book.controller;
 
+import com.example.springdeploytest.book.controller.request_form.ListBookRequestForm;
 import com.example.springdeploytest.book.controller.request_form.RegisterBookRequestForm;
+import com.example.springdeploytest.book.controller.response_form.ListBookResponseForm;
 import com.example.springdeploytest.book.controller.response_form.RegisterBookResponseForm;
 import com.example.springdeploytest.book.service.BookService;
+import com.example.springdeploytest.book.service.request.ListBookRequest;
 import com.example.springdeploytest.book.service.request.RegisterBookRequest;
+import com.example.springdeploytest.book.service.response.ListBookResponse;
 import com.example.springdeploytest.book.service.response.RegisterBookResponse;
 import com.example.springdeploytest.redis_cache.RedisCacheService;
 import lombok.RequiredArgsConstructor;
@@ -40,5 +44,15 @@ public class BookController {
 
         // 책 등록이 잘 되었는지 read 혹은 필요에 따라 list에 적합한 응답 구성
         return RegisterBookResponseForm.from(response);
+    }
+
+    @GetMapping("/list")
+    public ListBookResponseForm bookList(@ModelAttribute ListBookRequestForm requestForm) {
+        log.info("bookList() -> requestForm: {}", requestForm);
+
+        ListBookRequest request = requestForm.toListBookRequest();
+        ListBookResponse response = bookService.list(request);
+
+        return ListBookResponseForm.from(response);
     }
 }

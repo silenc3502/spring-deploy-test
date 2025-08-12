@@ -19,7 +19,10 @@ services:
 
   redis:
     image: redis:7.0.4
+    # command: redis-server /etc/redis/redis.conf
     command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
+      # volumes:
+    # - ./redis.conf:/etc/redis/redis.conf
     container_name: redis-container
     hostname: redis_standalone
     labels:
@@ -43,13 +46,15 @@ services:
     depends_on:
       - db
     ports:
-      - "7777:7777"
+      - "7778:7778"
     command:
       - bash
       - -c
       - |
         /wait-for-it.sh db:3306 -t 15
         java -jar /app.jar
+    env_file:
+      - .env
     networks:
       - app
 

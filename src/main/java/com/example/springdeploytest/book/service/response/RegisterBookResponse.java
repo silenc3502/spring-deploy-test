@@ -11,12 +11,14 @@ public class RegisterBookResponse {
     final private String title;
     final private String content;
     final private String registeredAccountNickname;
+    final private Long price;
 
     public static RegisterBookResponse from(final Book book) {
         return new RegisterBookResponse(
                 book.getId(),
                 book.getTitle(),
                 book.getContent(),
-                book.getAccount().getNickname());
+                book.getAccount().getNickname(),
+                book.getPrice());
     }
 }
